@@ -60,7 +60,7 @@ public class Point extends DefaultWaypoint{
     }
 
     public static enum PointType {
-        START, END
+        START,TRACE, END
     }
     
 }

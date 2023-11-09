@@ -27,12 +27,13 @@ import services.RoutingService;
 public class Main extends JFrame {
 
     private final ExtractData extractData;
-    private final Set<Point> waypoints = new HashSet<>();
+    private final Set<Point> routePoints = new HashSet<>();
+    private final Set<Point> tracePoints = new HashSet<>();
     private List<RoutingData> routingData = new ArrayList<>();
     private WayPointEvent event;
 
     public Main() {
-        extractData = new ExtractData("src/content/places_conections.pl");
+        extractData = new ExtractData("src/content/data_knowledge.pl");
         initComponents();
         init();
         setTitle("RoutMap");
@@ -59,10 +60,10 @@ public class Main extends JFrame {
         DefaultComboBoxModel<String> originComboBoxModel = new DefaultComboBoxModel<>();
         DefaultComboBoxModel<String> destinationComboBoxModel = new DefaultComboBoxModel<>();
 
-        List<Place> placesList = extractData.getPlaces();
-        for (Place place : placesList) {
-            originComboBoxModel.addElement(place.getName().replace("_", " "));
-            destinationComboBoxModel.addElement(place.getName().replace("_", " "));
+        List<String> placesList = extractData.getPlaces();
+        for (String place : placesList) {
+            originComboBoxModel.addElement(place.replace("_", " "));
+            destinationComboBoxModel.addElement(place.replace("_", " "));
         }
 
         originBox.setModel(originComboBoxModel);
@@ -74,20 +75,38 @@ public class Main extends JFrame {
                 String origin = (String) originBox.getSelectedItem();
                 String destination = (String) destinationBox.getSelectedItem();
 
-                Place origin_place = extractData.getPlace(origin.toString().replace(" ", "_"));
-                Place destination_place = extractData.getPlace(destination.toString().replace(" ", "_"));
+                List<String> route = extractData.getRoute(origin.replace(" ", "_"), destination.replace(" ", "_"));                
                 
                 if (origin.equals(destination)) {
                     clearWaypoint();
                     JOptionPane.showMessageDialog(Main.this, "El origen y el destino no pueden ser iguales.");
                 } 
                 else {
-                    if (origin_place==null && destination_place==null) {
+                    if (route.isEmpty()) {
                         clearWaypoint();
                         JOptionPane.showMessageDialog(Main.this, "No se encontró una ruta entre los lugares seleccionados.");
-                    } else {     
-                        addWaypoint(new Point(origin_place.getName().replace("_", " "),Point.PointType.START, event, new GeoPosition(origin_place.getLatitude(),origin_place.getLongitude())));
-                        addWaypoint(new Point(destination_place.getName().replace("_", " "),Point.PointType.END, event, new GeoPosition(destination_place.getLatitude(),destination_place.getLongitude())));
+                    } else {  
+                        for (int i = 0; i < route.size(); i++) {
+                            Place place = extractData.getPlace(route.get(i).replace(" ", "_"));
+                            
+                            Point.PointType pointType;
+                            if (i == 0) {
+                                pointType = Point.PointType.START;
+                            } else if (i == route.size() - 1) {
+                                pointType = Point.PointType.END;
+                            } else {
+                                pointType = Point.PointType.TRACE; 
+                            }
+                            
+                            Point waypoint = new Point(
+                                place.getName().replace("_", " "),
+                                pointType,
+                                event,
+                                new GeoPosition(place.getLatitude(), place.getLongitude())
+                            );
+                            
+                            addRoutePoint(waypoint);
+                        }
                     }
                 }
             }
@@ -96,16 +115,17 @@ public class Main extends JFrame {
       
     private void initWaypoint() {
         WaypointPainter<Point> wp = new WayPointRender();
-        wp.setWaypoints(waypoints);
         jXMapViewer.setOverlayPainter(wp);
-        for (Point d : waypoints) {
-            jXMapViewer.add(d.getButton());
+        wp.setWaypoints(routePoints);
+        
+        for (Point routePoint : routePoints) {
+            jXMapViewer.add(routePoint.getButton());
         }
        
-        if (waypoints.size() == 2) {
+        if (!routePoints.isEmpty()) {
             GeoPosition start = null;
             GeoPosition end = null;
-            for (Point w : waypoints) {
+            for (Point w : routePoints) {
                 if (w.getPointType() == Point.PointType.START) {
                     start = w.getPosition();
                 } else if (w.getPointType() == Point.PointType.END) {
@@ -114,7 +134,6 @@ public class Main extends JFrame {
             }
             if (start != null && end != null) {
                 routingData = RoutingService.getInstance().routing(start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude());
-
             } else {
                 routingData.clear();
             }
@@ -122,26 +141,20 @@ public class Main extends JFrame {
         }
     }
 
-    private void addWaypoint(Point waypoint) {
-        for (Point d : waypoints) {
+    private void addRoutePoint(Point waypoint) {
+        for (Point d : routePoints) {
             jXMapViewer.remove(d.getButton());
         }
-        Iterator<Point> iter = waypoints.iterator();
-        while (iter.hasNext()) {
-            if (iter.next().getPointType() == waypoint.getPointType()) {
-                iter.remove();
-            }
-        }
-        waypoints.add(waypoint);
+        routePoints.add(waypoint);
         initWaypoint();
     }
 
     private void clearWaypoint() {
-        for (Point d : waypoints) {
+        for (Point d : routePoints) {
             jXMapViewer.remove(d.getButton());
         }
         routingData.clear();
-        waypoints.clear();
+        routePoints.clear();
         initWaypoint();
     }
     

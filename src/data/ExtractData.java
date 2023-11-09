@@ -27,30 +27,45 @@ public class ExtractData {
         return new Query(query);
     }
     
-    public List<Place> getPlaces() {
-        List<Place> places = new ArrayList<>();
-        Query getPlacesQuery = getQuery("place(Place, Lat, Lon)");
+    public List<String> getPlaces() {
+        List<String> places = new ArrayList<>();
+        Query getPlacesQuery = getQuery("place(Place)");
 
         while (getPlacesQuery != null && getPlacesQuery.hasMoreSolutions()) {
             java.util.Map<String, Term> solution = getPlacesQuery.nextSolution();
             Term placeTerm = solution.get("Place");
-            Term latTerm = solution.get("Lat");
-            Term lonTerm = solution.get("Lon");
 
-            if (placeTerm != null && latTerm != null && lonTerm != null) {
-                String placeName = placeTerm.toString();
-                double latitude = latTerm.doubleValue();
-                double longitude = lonTerm.doubleValue();
-                Place place = new Place(placeName, latitude, longitude);
-                places.add(place);
+            if (placeTerm != null) {
+                places.add(placeTerm.toString());
             }
         }
-
         return places;
+    }
+    
+    public List<String> getRoute(String start, String end) {
+        List<String> route = new ArrayList<>();
+        Query query = new Query("find_route(" + start + "," + end + ", Route)");
+
+        if (query.hasSolution()) {
+            Map<String, Term> solution = query.oneSolution();
+            Term routeTerm = solution.get("Route");
+            if (routeTerm != null && routeTerm.isList()) {
+                Term currentTerm = routeTerm;
+
+                while (currentTerm.arity() == 2) {
+                    Term term = currentTerm.arg(1);
+                    String place = term.toString();
+                    route.add(place);
+                    currentTerm = currentTerm.arg(2);
+                }
+            }
+        }
+        
+        return route;
     }
 
     public Place getPlace(String placeName) {
-        Query getPlacesQuery = getQuery("place(" + placeName + ", Lat, Lon)");
+        Query getPlacesQuery = getQuery("coordinate("+placeName+", Lat, Lon)");
         if (getPlacesQuery != null && getPlacesQuery.hasSolution()) {
             java.util.Map<String, Term> solution = getPlacesQuery.oneSolution();
             Term latTerm = solution.get("Lat");
@@ -62,7 +77,8 @@ public class ExtractData {
                 return new Place(placeName, latitude, longitude);
             }
         }
-
         return null;
     }
+    
+
 }
