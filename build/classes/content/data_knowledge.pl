@@ -16,8 +16,26 @@ place(escuela_creativa,13.671779967910235, -89.21163511505114).
 place(centro_escolar,13.667839589177229, -89.20666029731218).
 
 % Conections
+connection(parque_torogoz, parque_el_cedro).
+connection(parque_el_cedro, parque_torogoz).
+
 connection(parque_torogoz,clinica_denta_luis_fuente).
 connection(clinica_denta_luis_fuente,parque_torogoz).
+
+connection(parque_torogoz, tienda_my_market).
+connection(tienda_my_market, parque_torogoz).
+
+connection(tienda_my_market, decorative_party_mark).
+connection(decorative_party_mark, tienda_my_market).
+
+connection(parque_el_cedro, parque_las_gardemias).
+connection(parque_las_gardemias, parque_el_cedro).
+
+connection(parque_san_sebatian, parque_el_cedro).
+connection(parque_el_cedro, parque_san_sebatian).
+
+connection(parque_colibri, ferreteria_jordi).
+connection(ferreteria_jordi, parque_colibri).
 
 connection(clinica_denta_luis_fuente,parque_colibri).
 connection(parque_colibri, clinica_denta_luis_fuente).
@@ -27,6 +45,21 @@ connection(gasolinera_uno_pijullo, clinica_denta_luis_fuente).
 
 connection(gasolinera_uno_pijullo,parque_pijullo).
 connection(parque_pijullo, gasolinera_uno_pijullo).
+
+connection(clinica_denta_luis_fuente, parque_dichoso_fui).
+connection(parque_dichoso_fui, clinica_denta_luis_fuente).
+
+connection(centro_escolar_san_patricio, parque_dichoso_fui).
+connection(parque_dichoso_fui, centro_escolar_san_patricio).
+
+connection(escuela_creativa, centro_escolar_san_patricio).
+connection(centro_escolar_san_patricio, escuela_creativa).
+
+connection(ferreteria_jordi, centro_escolar).
+connection(centro_escolar, ferreteria_jordi).
+
+connection(ferreteria_jordi, terapian_fisica_natural_heling).
+connection(terapian_fisica_natural_heling, ferreteria_jordi).
 
 % Predicate to get route
 find_route(Start, End, Route) :-

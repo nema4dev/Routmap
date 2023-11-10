@@ -28,7 +28,7 @@ public class RoutingService {
     }
 
     private RoutingService() {
-        hopper = createGraphHopperInstance("osm/el-salvador-latest.osm.pbf");
+        hopper = createGraphHopperInstance("src/content/el-salvador-latest.osm.pbf");
     }
 
     private GraphHopper createGraphHopperInstance(String ghLoc) {
