@@ -29,7 +29,7 @@ public class ExtractData {
     
     public List<String> getPlaces() {
         List<String> places = new ArrayList<>();
-        Query getPlacesQuery = getQuery("place(Place)");
+        Query getPlacesQuery = getQuery("place(Place,Lat,Lon)");
 
         while (getPlacesQuery != null && getPlacesQuery.hasMoreSolutions()) {
             java.util.Map<String, Term> solution = getPlacesQuery.nextSolution();
@@ -65,7 +65,7 @@ public class ExtractData {
     }
 
     public Place getPlace(String placeName) {
-        Query getPlacesQuery = getQuery("coordinate("+placeName+", Lat, Lon)");
+        Query getPlacesQuery = getQuery("place("+placeName+", Lat, Lon)");
         if (getPlacesQuery != null && getPlacesQuery.hasSolution()) {
             java.util.Map<String, Term> solution = getPlacesQuery.oneSolution();
             Term latTerm = solution.get("Lat");

@@ -21,14 +21,12 @@ import org.jxmapviewer.viewer.WaypointPainter;
 import events.WayPointEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import services.RoutingService;
 
 public class Main extends JFrame {
 
     private final ExtractData extractData;
     private final Set<Point> routePoints = new HashSet<>();
-    private final Set<Point> tracePoints = new HashSet<>();
     private List<RoutingData> routingData = new ArrayList<>();
     private WayPointEvent event;
 
@@ -86,6 +84,7 @@ public class Main extends JFrame {
                         clearWaypoint();
                         JOptionPane.showMessageDialog(Main.this, "No se encontró una ruta entre los lugares seleccionados.");
                     } else {  
+                        clearWaypoint();
                         for (int i = 0; i < route.size(); i++) {
                             Place place = extractData.getPlace(route.get(i).replace(" ", "_"));
                             
