@@ -7,29 +7,29 @@ place(parque_el_cedro, 13.666780151501662, -89.21117563224335).
 place(parque_pijullo,13.669143902447644, -89.20792239583879).
 place(parque_san_sebatian, 13.666012187883446, -89.21233958718328).
 place(gasolinera_uno_pijullo,13.669014116361335, -89.20818474624576).
-place(terapian_fisica_natural_heling,13.663787101120736, -89.2102047507637).
+%place(terapian_fisica_natural_heling,13.663787101120736, -89.2102047507637).
 place(decorative_party_mark,13.66800557020794, -89.21228325326422).
 place(tienda_my_market, 13.668197129691523, -89.21140885315533).
 place(clinica_denta_luis_fuente,13.669180049280396, -89.20975746549537).
 place(centro_escolar_san_patricio,13.67022841734383, -89.21204744376256).
 place(escuela_creativa,13.671779967910235, -89.21163511505114).
 place(centro_escolar,13.667839589177229, -89.20666029731218).
+place(ferreteria_jordi, 13.666355085647645, -89.20914400261711).
 
 % Conections
-connection(parque_torogoz, parque_el_cedro).
-connection(parque_el_cedro, parque_torogoz).
+
 
 connection(parque_torogoz,clinica_denta_luis_fuente).
 connection(clinica_denta_luis_fuente,parque_torogoz).
+
+
+connection(parque_el_cedro, parque_torogoz).
 
 connection(parque_torogoz, tienda_my_market).
 connection(tienda_my_market, parque_torogoz).
 
 connection(tienda_my_market, decorative_party_mark).
 connection(decorative_party_mark, tienda_my_market).
-
-connection(parque_el_cedro, parque_las_gardemias).
-connection(parque_las_gardemias, parque_el_cedro).
 
 connection(parque_san_sebatian, parque_el_cedro).
 connection(parque_el_cedro, parque_san_sebatian).
@@ -55,8 +55,7 @@ connection(parque_dichoso_fui, centro_escolar_san_patricio).
 connection(escuela_creativa, centro_escolar_san_patricio).
 connection(centro_escolar_san_patricio, escuela_creativa).
 
-connection(ferreteria_jordi, centro_escolar).
-connection(centro_escolar, ferreteria_jordi).
+
 
 connection(ferreteria_jordi, terapian_fisica_natural_heling).
 connection(terapian_fisica_natural_heling, ferreteria_jordi).

@@ -70,6 +70,8 @@ public class Main extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                clearWaypoint();
+                                        
                 String origin = (String) originBox.getSelectedItem();
                 String destination = (String) destinationBox.getSelectedItem();
 
@@ -84,7 +86,7 @@ public class Main extends JFrame {
                         clearWaypoint();
                         JOptionPane.showMessageDialog(Main.this, "No se encontró una ruta entre los lugares seleccionados.");
                     } else {  
-                        clearWaypoint();
+
                         for (int i = 0; i < route.size(); i++) {
                             Place place = extractData.getPlace(route.get(i).replace(" ", "_"));
                             
@@ -103,7 +105,7 @@ public class Main extends JFrame {
                                 event,
                                 new GeoPosition(place.getLatitude(), place.getLongitude())
                             );
-                            
+                            //
                             addRoutePoint(waypoint);
                         }
                     }
